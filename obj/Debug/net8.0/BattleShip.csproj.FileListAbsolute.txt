@@ -1,0 +1,15 @@
+/Users/ulises/Desktop/Tareas UMG/Tercer Semestre/PROGRAMACION I/Visual Studio Code/BATTLESHIP/BattleShip/bin/Debug/net8.0/BattleShip
+/Users/ulises/Desktop/Tareas UMG/Tercer Semestre/PROGRAMACION I/Visual Studio Code/BATTLESHIP/BattleShip/bin/Debug/net8.0/BattleShip.deps.json
+/Users/ulises/Desktop/Tareas UMG/Tercer Semestre/PROGRAMACION I/Visual Studio Code/BATTLESHIP/BattleShip/bin/Debug/net8.0/BattleShip.runtimeconfig.json
+/Users/ulises/Desktop/Tareas UMG/Tercer Semestre/PROGRAMACION I/Visual Studio Code/BATTLESHIP/BattleShip/bin/Debug/net8.0/BattleShip.dll
+/Users/ulises/Desktop/Tareas UMG/Tercer Semestre/PROGRAMACION I/Visual Studio Code/BATTLESHIP/BattleShip/bin/Debug/net8.0/BattleShip.pdb
+/Users/ulises/Desktop/Tareas UMG/Tercer Semestre/PROGRAMACION I/Visual Studio Code/BATTLESHIP/BattleShip/obj/Debug/net8.0/BattleShip.GeneratedMSBuildEditorConfig.editorconfig
+/Users/ulises/Desktop/Tareas UMG/Tercer Semestre/PROGRAMACION I/Visual Studio Code/BATTLESHIP/BattleShip/obj/Debug/net8.0/BattleShip.AssemblyInfoInputs.cache
+/Users/ulises/Desktop/Tareas UMG/Tercer Semestre/PROGRAMACION I/Visual Studio Code/BATTLESHIP/BattleShip/obj/Debug/net8.0/BattleShip.AssemblyInfo.cs
+/Users/ulises/Desktop/Tareas UMG/Tercer Semestre/PROGRAMACION I/Visual Studio Code/BATTLESHIP/BattleShip/obj/Debug/net8.0/BattleShip.csproj.CoreCompileInputs.cache
+/Users/ulises/Desktop/Tareas UMG/Tercer Semestre/PROGRAMACION I/Visual Studio Code/BATTLESHIP/BattleShip/obj/Debug/net8.0/BattleShip.sourcelink.json
+/Users/ulises/Desktop/Tareas UMG/Tercer Semestre/PROGRAMACION I/Visual Studio Code/BATTLESHIP/BattleShip/obj/Debug/net8.0/BattleShip.dll
+/Users/ulises/Desktop/Tareas UMG/Tercer Semestre/PROGRAMACION I/Visual Studio Code/BATTLESHIP/BattleShip/obj/Debug/net8.0/refint/BattleShip.dll
+/Users/ulises/Desktop/Tareas UMG/Tercer Semestre/PROGRAMACION I/Visual Studio Code/BATTLESHIP/BattleShip/obj/Debug/net8.0/BattleShip.pdb
+/Users/ulises/Desktop/Tareas UMG/Tercer Semestre/PROGRAMACION I/Visual Studio Code/BATTLESHIP/BattleShip/obj/Debug/net8.0/BattleShip.genruntimeconfig.cache
+/Users/ulises/Desktop/Tareas UMG/Tercer Semestre/PROGRAMACION I/Visual Studio Code/BATTLESHIP/BattleShip/obj/Debug/net8.0/ref/BattleShip.dll
