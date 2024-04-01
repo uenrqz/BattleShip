@@ -21,7 +21,7 @@ namespace BattleShip
     class GameEngine
     {
         public Ships ships;
-        public Ships playerShips;
+    public Ships playerShips;
         public int Pista { get; set; }
         List<char> _MiIsla = new List<char>();
         List<char> _IslaEnemiga = new List<char>();
@@ -31,6 +31,7 @@ namespace BattleShip
         char saveCharacter;
         public int TusBarcos { get; set; }
         public int BarcosEnemigos { get; set; }
+        private int index;
 
         enum Direction
         {
@@ -48,37 +49,44 @@ namespace BattleShip
 
         public void DrawIslands()
         {
-            Console.Clear();
+            // Encabezado con números de columna para la isla del jugador
+    Console.Write("  ");
+    for (int i = 1; i <= 10; i++)
+    {
+        Console.Write($"{i} ");
+    }
+    Console.Write("║ ");
 
-            // Encabezado con números de columna
-            Console.Write("  ");
-            for (int i = 1; i <= 10; i++)
-            {
-                Console.Write($"{i} ");
-            }
-            Console.WriteLine();
+    // Encabezado con números de columna para la isla enemiga
+    Console.Write(" ");
+    for (int i = 1; i <= 10; i++)
+    {
+        Console.Write($"{i} ");
+    }
+    Console.WriteLine();
 
-            // Filas de las islas
-            for (int i = 0; i < 10; i++)
-            {
-                // Letras de fila y contenido de la isla del jugador
-                Console.Write(((char)('A' + i)) + " ");
-                for (int j = 0; j < 10; j++)
-                {
-                    Console.Write("{0} ", _MiIsla[i * 10 + j]);
-                }
+    // Filas de las islas
+    for (int i = 0; i < 10; i++)
+    {
+        // Letras de fila y contenido de la isla del jugador
+        Console.Write(((char)('A' + i)) + " ");
+        for (int j = 0; j < 10; j++)
+        {
+            Console.Write("{0} ", _MiIsla[i * 10 + j]);
+        }
 
-                // Separador
-                Console.Write("║ ");
+        // Separador
+        Console.Write(" ║ ");
 
-                // Contenido de la isla enemiga
-                for (int j = 0; j < 10; j++)
-                {
-                    Console.Write("{0} ", _CubrirIslaEnemiga[i * 10 + j]);
-                }
+        // Contenido de la isla enemiga
+        Console.Write(((char)('A' + i)) + " ");
+        for (int j = 0; j < 10; j++)
+        {
+            Console.Write("{0} ", _CubrirIslaEnemiga[i * 10 + j]);
+        }
 
-                Console.WriteLine();
-            }
+        Console.WriteLine();
+    }
         }
         public void PrintEnemyIsla(List<char> enemyIsla)
         {
@@ -125,29 +133,29 @@ namespace BattleShip
 
             switch (userInput)
             {
-                case "1":
-                    // Ataque del jugador
-                    var (fila, columna) = SolicitarUbicacionDeAtaque();
-                    bool resultadoAtaque = playerShips.Attack(_IslaEnemiga, _CubrirIslaEnemiga, fila * 10 + columna);
+                    case "1":
+                       // Ataque del jugador
+                        var (fila, columna) = SolicitarUbicacionDeAtaque();
+                        index = fila * 10 + columna; // Elimina esta línea, ya que 'index' ya está declarada arriba
+                        bool resultadoAtaque = playerShips.Attack(_IslaEnemiga, _CubrirIslaEnemiga, index, this); // Pasar el objeto GameEngine como argumento
+    
+                        // Mostrar resultado del ataque
+                        if (resultadoAtaque)
+                        {
+                            GetSucces("¡Hundiste uno de los barcos enemigos! ¡PODER!");
+                        }
+                        else
+                        {
+                            GetError("¡Maldición, Almirante! No hay barco enemigo en esta posición.");
+                        }
+                        DrawIslands();
 
-                    // Mostrar resultado del ataque
-                    if (resultadoAtaque)
-                    {
-                        GetSucces("¡Hundiste uno de los barcos enemigos! ¡PODER!");
-                    }
-                    else
-                    {
-                        GetError("¡Maldición, Almirante! No hay barco enemigo en esta posición.");
-                    }
-                    DrawIslands();
+                        // Ataque de la IA (enemigo)
+                        playerShips.AttackEnemy(_MiIsla, playerShips); // Pasa una instancia de Ships en lugar de GameEngine
 
-                    // Ataque de la IA (enemigo)
-                    playerShips.AttackEnemy(_MiIsla, playerShips);
-
-                    // Verificar si alguien ha ganado
-                    HasAnyoneWon();
-                    break;
-
+                        // Verificar si alguien ha ganado
+                        HasAnyoneWon();
+                        break;
                 case "2":
                     // Usar pista
                     if (Pista == 1)
@@ -373,29 +381,28 @@ namespace BattleShip
             return false;
         }
 
-        public bool Attack(List<char> enemyIsla, List<char> enemyIslaCover, int index)
+        public bool Attack(List<char> enemyIsla, List<char> enemyIslaCover, int index, GameEngine gameEngine)
+{
+    try
+    {
+        if (enemyIsla[index] == '@')
         {
-            try
-            {
-                if (enemyIsla[index] == '@')
-                {
-                    enemyIsla[index] = 'X'; // Marcar el ataque en la isla enemiga
-                    motorDeJuego.BarcosEnemigos--; // Decrementar el contador de barcos enemigos
-                    enemyIslaCover[index] = 'X'; // Marcar el ataque en la isla del jugador
-                    return true;
-                }
-                else
-                {
-                    enemyIslaCover[index] = 'O'; // Marcar el ataque en la isla del jugador
-                    return false;
-                }
-            }
-            catch
-            {
-                return false;
-            }
+            enemyIsla[index] = 'X'; // Marcar el ataque en la isla enemiga
+            gameEngine.BarcosEnemigos--; // Decrementar el contador de barcos enemigos usando el objeto GameEngine proporcionado
+            enemyIslaCover[index] = 'X'; // Marcar el ataque en la isla del jugador
+            return true;
         }
-
+        else
+        {
+            enemyIslaCover[index] = 'O'; // Marcar el ataque en la isla del jugador
+            return false;
+        }
+    }
+    catch
+    {
+        return false;
+    }
+}
         public bool AttackEnemy(List<char> enemyIsla, Ships playerShips)
         {
             try
