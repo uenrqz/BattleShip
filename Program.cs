@@ -142,7 +142,7 @@ namespace BattleShip
                     DrawIslands();
 
                     // Ataque de la IA (enemigo)
-                    playerShips.AttackEnemy(_MiIsla);
+                    playerShips.AttackEnemy(_MiIsla, playerShips);
 
                     // Verificar si alguien ha ganado
                     HasAnyoneWon();
@@ -373,7 +373,7 @@ namespace BattleShip
             return false;
         }
 
-                public bool Attack(List<char> enemyIsla, List<char> enemyIslaCover, int index)
+        public bool Attack(List<char> enemyIsla, List<char> enemyIslaCover, int index)
         {
             try
             {
@@ -396,27 +396,27 @@ namespace BattleShip
             }
         }
 
-        public bool AttackEnemy(List<char> playerIsla)
+        public bool AttackEnemy(List<char> enemyIsla, Ships playerShips)
         {
             try
             {
                 Random randomGenerator = new Random();
-                int index = randomGenerator.Next(0, playerIsla.Count);
+                int index = randomGenerator.Next(0, enemyIsla.Count);
 
-                if (playerIsla[index] == '@')
+                if (enemyIsla[index] == '@')
                 {
-                    playerIsla[index] = 'X'; // Marcamos el ataque en la isla del jugador
-                    motorDeJuego.TusBarcos--; // Decrementamos el contador de barcos del jugador
-                    return true; // Indicamos que el ataque fue exitoso
+                    enemyIsla[index] = 'X'; // Marcar el ataque en la isla enemiga
+                    playerShips.TusBarcos--; // Decrementar el contador de barcos del jugador
+                    return true; // Indicar que el ataque fue exitoso
                 }
                 else
                 {
-                    return false; // Indicamos que el ataque no fue exitoso
+                    return false; // Indicar que el ataque no fue exitoso
                 }
             }
             catch
             {
-                return false; // Manejo básico de excepciones
+                return false; // Manejar básicamente excepciones
             }
         }
 
