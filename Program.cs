@@ -23,7 +23,6 @@ namespace BattleShip
         public Ships ships;
         public Ships playerShips;
         public int Pista { get; set; }
-        public string OtraPropiedad { get; private set; }
         List<char> _MiIsla = new List<char>();
         List<char> _IslaEnemiga = new List<char>();
         List<char> _CubrirIslaEnemiga = new List<char>();
@@ -49,11 +48,11 @@ namespace BattleShip
         public void DrawIslands()
         {
             Console.Clear();
-    
+
             Console.Write("  ");
-            for (int i = 1; i < 10; i++)
+            for (int i = 1; i <= 10; i++)
             {
-                Console.Write($"{i:D2} ");
+                Console.Write($"{i} ");
             }
             Console.WriteLine();
 
@@ -245,10 +244,10 @@ namespace BattleShip
             EstaGenerando = true;
         }
 
-        private void Move(Direction dir)
+        private void Move(Direction direction)
         {
             _CubrirIslaEnemiga[cubePosition] = saveCharacter;
-            cubePosition += (int)dir;
+            cubePosition += (int)direction;
 
             if (cubePosition > 0 && cubePosition < 100)
             {
