@@ -30,6 +30,7 @@ namespace BattleShip
         int cubePosition;
         char saveCharacter;
         public int TusBarcos { get; set; }
+        public int BarcosEnemigos { get; set; }
 
         enum Direction
         {
@@ -49,6 +50,7 @@ namespace BattleShip
         {
             Console.Clear();
 
+            // Encabezado con números de columna
             Console.Write("  ");
             for (int i = 1; i <= 10; i++)
             {
@@ -56,31 +58,49 @@ namespace BattleShip
             }
             Console.WriteLine();
 
-            int Counter = 0;
-            int HowManyTime = 0;
-
+            // Filas de las islas
             for (int i = 0; i < 10; i++)
             {
+                // Letras de fila y contenido de la isla del jugador
                 Console.Write(((char)('A' + i)) + " ");
-
                 for (int j = 0; j < 10; j++)
                 {
                     Console.Write("{0} ", _MiIsla[i * 10 + j]);
                 }
 
+                // Separador
                 Console.Write("║ ");
 
+                // Contenido de la isla enemiga
                 for (int j = 0; j < 10; j++)
                 {
                     Console.Write("{0} ", _CubrirIslaEnemiga[i * 10 + j]);
                 }
 
                 Console.WriteLine();
+            }
+        }
+        public void PrintEnemyIsla(List<char> enemyIsla)
+        {
+            Console.Write("  "); // Espacio para alinear las cabeceras de las columnas
+            for (int i = 1; i <= 10; i++)
+            {
+                Console.Write($"{i} "); // Imprime las cabeceras de las columnas (1-10)
+            }
+            Console.WriteLine();
 
-                if (HowManyTime == 100)
+            for (int row = 0; row < 10; row++)
+            {
+                // Convertir el número de fila (0-9) a letra (A-J)
+                char rowHeader = (char)('A' + row);
+                Console.Write($"{rowHeader} "); // Imprime la cabecera de la fila
+
+                for (int col = 0; col < 10; col++)
                 {
-                    break;
+                    int index = row * 10 + col; // Ajusta esto según cómo estés indexando tu isla
+                    Console.Write($"{enemyIsla[index]} "); // Imprime el estado actual del tablero
                 }
+                Console.WriteLine(); // Nueva línea al final de cada fila
             }
         }
 
@@ -106,71 +126,30 @@ namespace BattleShip
             switch (userInput)
             {
                 case "1":
+                    // Ataque del jugador
                     var (fila, columna) = SolicitarUbicacionDeAtaque();
                     bool resultadoAtaque = playerShips.Attack(_IslaEnemiga, _CubrirIslaEnemiga, fila * 10 + columna);
 
+                    // Mostrar resultado del ataque
                     if (resultadoAtaque)
                     {
-                        _IslaEnemiga[fila * 10 + columna] = 'X';
+                        GetSucces("¡Hundiste uno de los barcos enemigos! ¡PODER!");
                     }
                     else
                     {
-                        _IslaEnemiga[fila * 10 + columna] = 'O';
+                        GetError("¡Maldición, Almirante! No hay barco enemigo en esta posición.");
                     }
-                    cubePosition = 0;
-                    saveCharacter = _CubrirIslaEnemiga[cubePosition];
-                    _CubrirIslaEnemiga[cubePosition] = '■';
                     DrawIslands();
-                    bool isEnter = false;
 
-                    while (!isEnter)
-                    {
-                        ConsoleKeyInfo readKey = Console.ReadKey();
-
-                        switch (readKey.Key)
-                        {
-                            case ConsoleKey.UpArrow:
-                                Move(Direction.Up);
-                                break;
-
-                            case ConsoleKey.DownArrow:
-                                Move(Direction.Down);
-                                break;
-
-                            case ConsoleKey.RightArrow:
-                                Move(Direction.Right);
-                                break;
-
-                            case ConsoleKey.LeftArrow:
-                                Move(Direction.Left);
-                                break;
-
-                            case ConsoleKey.Enter:
-                                isEnter = true;
-                                bool result = playerShips.Attack(_IslaEnemiga, _CubrirIslaEnemiga, cubePosition);
-
-                                if (result)
-                                {
-                                    GetSucces("¡Hundiste uno de los barcos enemigos! ¡PODER!");
-                                    if (Pista == 0)
-                                    {
-                                        Pista++;
-                                    }
-                                    HasAnyoneWon();
-                                }
-                                else
-                                {
-                                    GetError("¡Maldición, Almirante!");
-                                }
-                                break;
-                        }
-                    }
-
+                    // Ataque de la IA (enemigo)
                     playerShips.AttackEnemy(_MiIsla);
+
+                    // Verificar si alguien ha ganado
                     HasAnyoneWon();
                     break;
 
                 case "2":
+                    // Usar pista
                     if (Pista == 1)
                     {
                         string userChoice = GetString("¿Estás seguro de usar la pista [PRESIONA Y]? (si no hay ningún barco en la fila, uno de tus barcos se hundirá)");
@@ -242,24 +221,6 @@ namespace BattleShip
             playerShips.GenerateShips(_MiIsla);
             playerShips.GenerateShips(_IslaEnemiga);
             EstaGenerando = true;
-        }
-
-        private void Move(Direction direction)
-        {
-            _CubrirIslaEnemiga[cubePosition] = saveCharacter;
-            cubePosition += (int)direction;
-
-            if (cubePosition > 0 && cubePosition < 100)
-            {
-                saveCharacter = _CubrirIslaEnemiga[cubePosition];
-                _CubrirIslaEnemiga[cubePosition] = '■';
-                DrawIslands();
-            }
-            else
-            {
-                GetError("No puedes moverte fuera del campo");
-                cubePosition = 0;
-            }
         }
 
         private void HasAnyoneWon()
@@ -412,19 +373,20 @@ namespace BattleShip
             return false;
         }
 
-        public bool Attack(List<char> enemyIsla, List<char> enemyIslaCover, int index)
+                public bool Attack(List<char> enemyIsla, List<char> enemyIslaCover, int index)
         {
             try
             {
                 if (enemyIsla[index] == '@')
                 {
-                    enemyIsla[index] = 'X';
-                    BarcosEnemigos--;
+                    enemyIsla[index] = 'X'; // Marcar el ataque en la isla enemiga
+                    motorDeJuego.BarcosEnemigos--; // Decrementar el contador de barcos enemigos
+                    enemyIslaCover[index] = 'X'; // Marcar el ataque en la isla del jugador
                     return true;
                 }
                 else
                 {
-                    enemyIslaCover[index] = 'O';
+                    enemyIslaCover[index] = 'O'; // Marcar el ataque en la isla del jugador
                     return false;
                 }
             }
@@ -434,28 +396,31 @@ namespace BattleShip
             }
         }
 
-        public bool AttackEnemy(List<char> enemyIsla)
+        public bool AttackEnemy(List<char> playerIsla)
         {
             try
             {
                 Random randomGenerator = new Random();
-                int index = randomGenerator.Next(0, enemyIsla.Count);
+                int index = randomGenerator.Next(0, playerIsla.Count);
 
-                if (enemyIsla[index] == '@')
+                if (playerIsla[index] == '@')
                 {
-                    motorDeJuego.TusBarcos--;
-                    enemyIsla[index] = 'X';
-                    return true;
+                    playerIsla[index] = 'X'; // Marcamos el ataque en la isla del jugador
+                    motorDeJuego.TusBarcos--; // Decrementamos el contador de barcos del jugador
+                    return true; // Indicamos que el ataque fue exitoso
                 }
                 else
                 {
-                    return false;
+                    return false; // Indicamos que el ataque no fue exitoso
                 }
             }
             catch
             {
-                return false;
+                return false; // Manejo básico de excepciones
             }
         }
+
     }
 }
+
+                       
