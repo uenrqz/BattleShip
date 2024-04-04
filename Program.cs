@@ -21,7 +21,8 @@ namespace BattleShip
     class GameEngine
     {
         public Ships ships;
-    public Ships playerShips;
+        public Ships playerShips;
+        public Ships enemyShips;
         public int Pista { get; set; }
         List<char> _MiIsla = new List<char>();
         List<char> _IslaEnemiga = new List<char>();
@@ -32,7 +33,7 @@ namespace BattleShip
         public int TusBarcos { get; set; }
         public int BarcosEnemigos { get; set; }
         private int index;
-
+       
         enum Direction
         {
             Up = -10,
@@ -49,69 +50,46 @@ namespace BattleShip
 
         public void DrawIslands()
         {
+            Console.Clear();
             // Encabezado con números de columna para la isla del jugador
-    Console.Write("  ");
-    for (int i = 1; i <= 10; i++)
-    {
-        Console.Write($"{i} ");
-    }
-    Console.Write("║ ");
-
-    // Encabezado con números de columna para la isla enemiga
-    Console.Write(" ");
-    for (int i = 1; i <= 10; i++)
-    {
-        Console.Write($"{i} ");
-    }
-    Console.WriteLine();
-
-    // Filas de las islas
-    for (int i = 0; i < 10; i++)
-    {
-        // Letras de fila y contenido de la isla del jugador
-        Console.Write(((char)('A' + i)) + " ");
-        for (int j = 0; j < 10; j++)
-        {
-            Console.Write("{0} ", _MiIsla[i * 10 + j]);
-        }
-
-        // Separador
-        Console.Write(" ║ ");
-
-        // Contenido de la isla enemiga
-        Console.Write(((char)('A' + i)) + " ");
-        for (int j = 0; j < 10; j++)
-        {
-            Console.Write("{0} ", _CubrirIslaEnemiga[i * 10 + j]);
-        }
-
-        Console.WriteLine();
-    }
-        }
-        public void PrintEnemyIsla(List<char> enemyIsla)
-        {
-            Console.Write("  "); // Espacio para alinear las cabeceras de las columnas
+            Console.Write("  ");
             for (int i = 1; i <= 10; i++)
             {
-                Console.Write($"{i} "); // Imprime las cabeceras de las columnas (1-10)
+                Console.Write($"{i} ");
+            }
+            Console.Write("║ ");
+
+            // Encabezado con números de columna para la isla enemiga
+            Console.Write(" ");
+            for (int i = 1; i <= 10; i++)
+            {
+                Console.Write($"{i} ");
             }
             Console.WriteLine();
 
-            for (int row = 0; row < 10; row++)
+            // Filas de las islas
+            for (int i = 0; i < 10; i++)
             {
-                // Convertir el número de fila (0-9) a letra (A-J)
-                char rowHeader = (char)('A' + row);
-                Console.Write($"{rowHeader} "); // Imprime la cabecera de la fila
-
-                for (int col = 0; col < 10; col++)
+                // Letras de fila y contenido de la isla del jugador
+                Console.Write(((char)('A' + i)) + " ");
+                for (int j = 0; j < 10; j++)
                 {
-                    int index = row * 10 + col; // Ajusta esto según cómo estés indexando tu isla
-                    Console.Write($"{enemyIsla[index]} "); // Imprime el estado actual del tablero
+                    Console.Write("{0} ", _MiIsla[i * 10 + j]);
                 }
-                Console.WriteLine(); // Nueva línea al final de cada fila
+
+                // Separador
+                Console.Write(" ║");
+
+                // Contenido de la isla enemiga
+                Console.Write(((char)('A' + i)) + " ");
+                for (int j = 0; j < 10; j++)
+                {
+                    Console.Write("{0} ", _CubrirIslaEnemiga[i * 10 + j]);
+                }
+
+                Console.WriteLine();
             }
         }
-
         private void ShowInformation()
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -137,7 +115,7 @@ namespace BattleShip
                        // Ataque del jugador
                         var (fila, columna) = SolicitarUbicacionDeAtaque();
                         index = fila * 10 + columna; // Elimina esta línea, ya que 'index' ya está declarada arriba
-                        bool resultadoAtaque = playerShips.Attack(_IslaEnemiga, _CubrirIslaEnemiga, index, this); // Pasar el objeto GameEngine como argumento
+                        bool resultadoAtaque = playerShips.Attack(_IslaEnemiga, _CubrirIslaEnemiga, fila * 10 + columna); // Pasar el objeto GameEngine como argumento
     
                         // Mostrar resultado del ataque
                         if (resultadoAtaque)
@@ -381,14 +359,14 @@ namespace BattleShip
             return false;
         }
 
-        public bool Attack(List<char> enemyIsla, List<char> enemyIslaCover, int index, GameEngine gameEngine)
+        public bool Attack(List<char> enemyIsla, List<char> enemyIslaCover, int index)
 {
     try
     {
         if (enemyIsla[index] == '@')
         {
             enemyIsla[index] = 'X'; // Marcar el ataque en la isla enemiga
-            gameEngine.BarcosEnemigos--; // Decrementar el contador de barcos enemigos usando el objeto GameEngine proporcionado
+            motorDeJuego.BarcosEnemigos--; // Decrementar el contador de barcos enemigos usando el objeto GameEngine proporcionado
             enemyIslaCover[index] = 'X'; // Marcar el ataque en la isla del jugador
             return true;
         }
