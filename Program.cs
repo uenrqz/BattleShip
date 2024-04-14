@@ -366,8 +366,8 @@ namespace BattleShip
         if (enemyIsla[index] == '@')
         {
             enemyIsla[index] = 'X'; // Marcar el ataque en la isla enemiga
-            motorDeJuego.BarcosEnemigos--; // Decrementar el contador de barcos enemigos usando el objeto GameEngine proporcionado
-            enemyIslaCover[index] = 'X'; // Marcar el ataque en la isla del jugador
+            BarcosEnemigos--; // Decrementar el contador de barcos enemigos usando el objeto GameEngine proporcionado
+            enemyIslaCover[index] = 'X'; // Marcar el ataque en la isla enemiga cubierta.
             return true;
         }
         else
